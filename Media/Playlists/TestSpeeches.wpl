@@ -1,0 +1,15 @@
+<?wpl version="1.0"?>
+<smil>
+    <head>
+        <meta name="Generator" content="Microsoft Windows Media Player -- 12.0.19041.746"/>
+        <meta name="ItemCount" content="3"/>
+        <title>TestSpeeches</title>
+    </head>
+    <body>
+        <seq>
+            <media src="..\TestTracks\Spectator\Spec1.mp3" tid="{E1070C64-10ED-4CF4-AA9D-E47FBFBB670A}"/>
+            <media src="..\TestTracks\Spectator\Spec2.mp3" tid="{B4197B11-A67F-4C79-8F42-42F0906906AF}"/>
+            <media src="..\TestTracks\Spectator\Spec3.mp3" tid="{B78DD3D8-E370-40BB-8ABE-711D030E1971}"/>
+        </seq>
+    </body>
+</smil>

@@ -1,0 +1,14 @@
+<?wpl version="1.0"?>
+<smil>
+    <head>
+        <meta name="Generator" content="Microsoft Windows Media Player -- 12.0.19041.746"/>
+        <meta name="ItemCount" content="2"/>
+        <title>TestSongs</title>
+    </head>
+    <body>
+        <seq>
+            <media src="..\TestTracks\MIDIMusic\Battle.mp3"/>
+            <media src="..\TestTracks\MIDIMusic\MenuSong.mp3"/>
+        </seq>
+    </body>
+</smil>
