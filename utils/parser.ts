@@ -1,18 +1,18 @@
-import { NewUser, Status, TextForTTS } from "../types";
+import { NewUser, NewUserFields, Status, TextFields, TextForTTS } from "../types";
 
-const isString = (text: any): text is string => {
+const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
 };
 
-const isNumber = (number: any): number is number => {
+const isNumber = (number: unknown): number is number => {
     return typeof number === 'number' || number instanceof Number;
 };
 
-const isStatus = (status: any): status is Status => {
-    return ["admin", "user"].includes(status)
-}
+const isStatus = (status: string): status is Status => {
+    return ["admin", "user"].includes(status);
+};
 
-const parseGenericTextField = (text: any, error: string): string => {
+const parseGenericTextField = (text: unknown, error: string): string => {
     if(!text || !isString(text)) {
         throw new Error('Missing or invalid ' + error);
     }
@@ -20,71 +20,73 @@ const parseGenericTextField = (text: any, error: string): string => {
 };
 
 
-const parseGenericNumberField = (number: any, error: string): number => {
+const parseGenericNumberField = (number: unknown, error: string): number => {
     if((!number && number !== 0) || !isNumber(number)) {
         throw new Error('Missing or invalid ' + error);
     }
     return number;
 };
 
-const parseGenericBooleanField = (boolean: any, error: string): boolean => {
+/*
+const parseGenericBooleanField = (boolean: unknown, error: string): boolean => {
     if(typeof boolean === 'boolean') {
         return boolean;
     }
-    throw new Error('Missing or invalid ' + error)
-}
+    throw new Error('Missing or invalid ' + error);
+};
+*/
 
-const parseStatus = (status: any): Status => {
+const parseStatus = (status: unknown): Status => {
     if(!status || !isString(status) || !isStatus(status)) {
-        throw new Error('Missing or invalid status')
+        throw new Error('Missing or invalid status');
         }
     return status;
-}
+};
 
-const parseUsername = (string: any, error: string): string => {
-    parseGenericTextField(string, error)
-    if(string.length < 3 || string.length > 30) {
-        throw new Error('Password length is not viable')
+const parseUsername = (string: unknown, error: string): string => {
+    const parsed = parseGenericTextField(string, error);
+    if(parsed.length < 3 || parsed.length > 30) {
+        throw new Error('Password length is not viable');
     }
-    return string;
-}
+    return parsed;
+};
 
-const parseTextLink = (string: any, error: string): string => {
-    parseGenericTextField(string, error)
+const parseTextLink = (string: unknown, error: string): string => {
+    const parsed = parseGenericTextField(string, error);
 
     const test = (text: string) => {
         const starts = (link:string) => {
-          return link.startsWith(text)
-        }
-        const viable = [""]
-        return viable.some(starts)
-      }
+          return link.startsWith(text);
+        };
+        const viable = [""];
+        return viable.some(starts);
+      };
       
-    if(!test(string)) {
-        throw new Error("Links from this site are not viable")
+    if(!test(parsed)) {
+        throw new Error("Links from this site are not viable");
     }
 
 
-    return string;
+    return parsed;
     
-}
+};
 
-export const toNewUser = (object: any): NewUser => {
+export const toNewUser = (object: NewUserFields): NewUser => {
     const newUser: NewUser = {
         user_name: parseUsername(object.user_name, "username"),
         password: parseGenericTextField(object.password, "password"),
         user_status: parseStatus(object.user_status)
-    }
-    return newUser
-}
+    };
+    return newUser;
+};
 
-export const toText = (object: any): TextForTTS => {
+export const toText = (object: TextFields): TextForTTS => {
     const text: TextForTTS = {
         name: parseGenericTextField(object.name, "name"),
         text: parseGenericTextField(object.text, "text"),
         link: parseTextLink(object.link, "link"),
         year: object.year ? parseGenericNumberField(object.year, "year") : null
-    }
+    };
 
-    return text
-}
+    return text;
+};

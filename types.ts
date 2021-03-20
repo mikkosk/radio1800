@@ -5,10 +5,16 @@ export interface User {
     user_status: Status
 }
 
-export type Status = "admin" | "user"
+export type Status = "admin" | "user";
 
 export interface NewUser extends Omit<User, "user_id" | "user_hash"> {
     password: string,
+}
+
+export interface NewUserFields {
+    user_name: unknown,
+    user_status: unknown,
+    password: unknown
 }
 
 export interface LoggedInUser extends User {
@@ -21,3 +27,24 @@ export interface TextForTTS {
     link: string,
     year?: number | null
 }
+
+export interface TextFields {
+    name: unknown,
+    text: unknown,
+    link: unknown,
+    year?: unknown
+}
+
+export interface Voice {
+    voice_id: string,
+    link: string,
+    voice_length: string,
+    voice_name: string,
+    added: Date,
+    last_play: Date,
+    from_text?: string,
+    to_text?: string,
+    year?: number
+}
+
+export type NewVoice = Omit<Voice, "voice_id" | "added" | "last_play">;

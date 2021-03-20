@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
     try {
         const result = await userService.getLoginUser(req.body.username);
 
-        const user = result
+        const user = result;
 
         const rightCredentials = user === null
             ? false

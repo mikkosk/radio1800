@@ -1,5 +1,5 @@
-import { TextForTTS } from "../types"
+import { TextForTTS } from "../types";
 
 export const processNewText = (text: TextForTTS) => {
-    console.log(text.text)
-}
+    console.log(text.text);
+};

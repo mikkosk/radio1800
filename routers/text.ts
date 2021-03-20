@@ -1,14 +1,12 @@
-import jwt from 'jsonwebtoken';
 import userService from '../services/userService';
 import express from 'express';
-import { allowedUserType, decodedToken, Token } from '../utils/userManagement';
-import { User } from '../types';
+import { allowedUserType, decodedToken } from '../utils/userManagement';
 import { toText } from '../utils/parser';
 import { processNewText } from '../utils/textServices';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    var token;
+    let token;
 
     try {
         
@@ -21,11 +19,11 @@ router.post('/', async (req, res) => {
         }
 
         if(!token.id) {
-            throw new Error
+            throw new Error;
         }
 
-        const text = toText(req.body)
-        processNewText(text)
+        const text = toText(req.body);
+        processNewText(text);
 
     } catch (e) {
         res.status(401).send("No authorization to post");

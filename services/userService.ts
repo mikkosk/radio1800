@@ -4,11 +4,11 @@ import bcrypt from "bcrypt";
 import pool from "../db";
 
 const addUser = async (entry: NewUser): Promise<User> => {
-    const {user_name, password, user_status} = entry
+    const {user_name, password, user_status} = entry;
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
     
-    const newUser: QueryResult = await pool.query(
+    const newUser: QueryResult<User> = await pool.query(
         "INSERT INTO radio_user (user_name, user_hash, user_status) VALUES($1, $2, $3) RETURNING *",
         [user_name, passwordHash, user_status]
     );
@@ -17,29 +17,29 @@ const addUser = async (entry: NewUser): Promise<User> => {
 };
 
 const getUser = async (userId: User['user_id']): Promise<User> => {
-    const user = await pool.query(
+    const user: QueryResult<User> = await pool.query(
         `SELECT * FROM radio_user
-        WHERE users.userid = $1
+        WHERE radio_user.user_id = $1
     `, [userId]
-    )
+    );
 
-    return user.rows[0]
-}
+    return user.rows[0];
+};
 
 const getLoginUser = async (username: User['user_name']): Promise<User> => {
-    const user = await pool.query(
+    const user: QueryResult<User> = await pool.query(
         `SELECT * FROM radio_user
-        WHERE users.username = $1
+        WHERE radio_user.user_id = $1
     `, [username]
-    )
+    );
 
-    return user.rows[0]
-}
+    return user.rows[0];
+};
 
 const deleteUser = async(id: User["user_id"]) => {
     await pool.query(
         "DELETE FROM radio_user WHERE userid = $1", [id]
-    )
-}
+    );
+};
 
-export default {addUser, getUser, getLoginUser, deleteUser}
+export default {addUser, getUser, getLoginUser, deleteUser};
