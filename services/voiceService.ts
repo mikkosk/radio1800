@@ -26,6 +26,16 @@ const addVoice = async (newVoice: NewVoice): Promise<Voice> => {
     return voice.rows[0];
 };
 
+const updateLastPlay = async(id: Voice['voice_id']): Promise<Voice> => {
+    const added = new Date().toDateString();
+    const voice: QueryResult<Voice> = await pool.query(
+        `UPDATE voice SET voice.last_play = $1
+        WHERE voice.voice_id = $2 RETURNING *`,
+        [added, id]
+    );
+    return voice.rows[0];
+};
+
 const getVoice = async (id: Voice['voice_id']): Promise<Voice> => {
     const voices: QueryResult<Voice> = await pool.query(
         `SELECT * FROM voice WHERE voice.voice_id = $1
@@ -44,6 +54,12 @@ const getVoices = async (): Promise<Voice[]> => {
     return voices.rows;
 };
 
-export default {addVoice, getVoices, getVoice};
+const deleteVoice = async(id: Voice["voice_id"]) => {
+    await pool.query(
+        "DELETE FROM voice WHERE voice_id = $1", [id]
+    );
+};
+
+export default {addVoice, getVoices, getVoice, updateLastPlay, deleteVoice};
 
 

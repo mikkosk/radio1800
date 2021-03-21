@@ -47,4 +47,19 @@ export interface Voice {
     year?: number
 }
 
+export interface VoiceWithTime extends Voice {
+    play_time: string
+}
+
+export interface Playlist {
+    playlist_id: string,
+    play_date: Date,
+    voices: VoiceWithTime[]
+}
 export type NewVoice = Omit<Voice, "voice_id" | "added" | "last_play">;
+
+export type NodeState = {
+    id: number, 
+    chars: number, 
+    current_list: number
+}

@@ -9,6 +9,7 @@ import textRouter from './routers/text';
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, '/files')));
 app.use(express.static(path.join(__dirname, '/Media/TestTracks/Spectator')));
 app.use('/api/audio', liquidsoapRouter);
 app.use('/api/user', userRouter);

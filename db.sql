@@ -29,9 +29,26 @@ CREATE TABLE voice
 CREATE TABLE playlist
 (
     playlist_id serial NOT NULL PRIMARY KEY,
-    play_date date NOT NULL,
-    voice_id integer NOT NULL,
-    play_time time NOT NULL
+    play_date date NOT NULL
 );
 
-ALTER TABLE playlist ADD FOREIGN KEY (voice_id) REFERENCES voice(voice_id);
+CREATE TABLE playlist_to_voice
+(
+    id serial NOT NULL PRIMARY KEY,
+    voice_id integer,
+    playlist_id integer,
+    play_time time
+
+);
+
+CREATE TABLE node_state
+(
+    id serial NOT NULL PRIMARY KEY,
+    chars integer,
+    current_list integer
+);
+
+
+
+ALTER TABLE playlist_to_voice ADD FOREIGN KEY (voice_id) REFERENCES voice(voice_id);
+ALTER TABLE playlist_to_voice ADD FOREIGN KEY (playlist_id) REFERENCES playlist(playlist_id) ON DELETE CASCADE;
