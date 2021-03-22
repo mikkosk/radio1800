@@ -62,4 +62,12 @@ export type NodeState = {
     id: number, 
     chars: number, 
     current_list: number
+};
+
+export class ErrorWithStatus extends Error {
+    status: number | undefined;
+    constructor(message: string | undefined, status: number | undefined) {
+        super(message);
+        this.status = status;
+    }
 }

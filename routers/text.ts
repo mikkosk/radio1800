@@ -3,6 +3,7 @@ import express from 'express';
 import { allowedUserType, decodedToken } from '../utils/userManagement';
 import { toText } from '../utils/parser';
 import { processNewText } from '../utils/textServices';
+
 const router = express.Router();
 
 router.post('/', async (req, res) => {
@@ -21,12 +22,14 @@ router.post('/', async (req, res) => {
         if(!token.id) {
             throw new Error;
         }
-
+        
         const text = toText(req.body);
-        processNewText(text);
+        const result = await processNewText(text);
+        res.json(result);
 
     } catch (e) {
-        res.status(401).send("No authorization to post");
+        const status: number = e.status as number || 400;
+        res.status(status).send(e.message);
         return;
     }
 });

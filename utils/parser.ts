@@ -1,4 +1,4 @@
-import { NewUser, NewUserFields, Status, TextFields, TextForTTS } from "../types";
+import { ErrorWithStatus, NewUser, NewUserFields, Status, TextFields, TextForTTS } from "../types";
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
@@ -14,7 +14,7 @@ const isStatus = (status: string): status is Status => {
 
 const parseGenericTextField = (text: unknown, error: string): string => {
     if(!text || !isString(text)) {
-        throw new Error('Missing or invalid ' + error);
+        throw new ErrorWithStatus('Missing or invalid ' + error, 400);
     }
     return text;
 };
@@ -22,7 +22,7 @@ const parseGenericTextField = (text: unknown, error: string): string => {
 
 const parseGenericNumberField = (number: unknown, error: string): number => {
     if((!number && number !== 0) || !isNumber(number)) {
-        throw new Error('Missing or invalid ' + error);
+        throw new ErrorWithStatus('Missing or invalid ' + error, 400);
     }
     return number;
 };
@@ -32,40 +32,40 @@ const parseGenericBooleanField = (boolean: unknown, error: string): boolean => {
     if(typeof boolean === 'boolean') {
         return boolean;
     }
-    throw new Error('Missing or invalid ' + error);
+    throw new ErrorWithStatus('Missing or invalid ' + error);
 };
 */
 
 const parseStatus = (status: unknown): Status => {
     if(!status || !isString(status) || !isStatus(status)) {
-        throw new Error('Missing or invalid status');
+        new ErrorWithStatus('Missing or invalid status', 400);
         }
-    return status;
+    return status as Status;
 };
 
 const parseUsername = (string: unknown, error: string): string => {
     const parsed = parseGenericTextField(string, error);
     if(parsed.length < 3 || parsed.length > 30) {
-        throw new Error('Password length is not viable');
+        new ErrorWithStatus('Password length is not viable', 400);
     }
     return parsed;
 };
 
 const parseTextLink = (string: unknown, error: string): string => {
     const parsed = parseGenericTextField(string, error);
-
+    
     const test = (text: string) => {
         const starts = (link:string) => {
-          return link.startsWith(text);
+            return text.startsWith(link);
         };
-        const viable = [""];
+        const viable = ["link"];
         return viable.some(starts);
       };
       
     if(!test(parsed)) {
-        throw new Error("Links from this site are not viable");
+        throw new ErrorWithStatus("Links from this site are not viable", 400);
     }
-
+    
 
     return parsed;
     

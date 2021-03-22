@@ -12,7 +12,7 @@ const addState = async (chars: number, current_list: number): Promise<NodeState>
 
 const updateChars = async(id: NodeState['id'], chars: NodeState['chars']): Promise<NodeState> => {
     const state: QueryResult<NodeState> = await pool.query(
-        `UPDATE node_state SET node_state.chars = $1
+        `UPDATE node_state SET chars = $1
         WHERE node_state.id = $2 RETURNING *`,
         [chars, id]
     );
@@ -21,7 +21,7 @@ const updateChars = async(id: NodeState['id'], chars: NodeState['chars']): Promi
 
 const updateList = async(id: NodeState['id'], list: NodeState['current_list']): Promise<NodeState> => {
     const state: QueryResult<NodeState> = await pool.query(
-        `UPDATE node_state SET node_state.current_list = $1
+        `UPDATE node_state SET current_list = $1
         WHERE node_state.id = $2 RETURNING *`,
         [list, id]
     );

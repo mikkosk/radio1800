@@ -20,7 +20,7 @@ export const addVoiceToList = async (voice: Voice['voice_id']) => {
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
     const state = await stateService.getState();
     if(!state) {
-        console.log("There is no playlist to put this!");
+        console.log("There is no playlist to put this in!");
     } else {
         await playlistService.addVoiceToPlaylist(voice, String(state.current_list), time);
     }
