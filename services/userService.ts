@@ -29,7 +29,7 @@ const getUser = async (userId: User['user_id']): Promise<User> => {
 const getLoginUser = async (username: User['user_name']): Promise<User> => {
     const user: QueryResult<User> = await pool.query(
         `SELECT * FROM radio_user
-        WHERE radio_user.user_id = $1
+        WHERE radio_user.user_name = $1
     `, [username]
     );
 

@@ -2,8 +2,10 @@ import express from 'express';
 import userService from '../services/userService';
 import { toNewUser } from '../utils/parser';
 import { decodedToken } from '../utils/userManagement';
+import bcrypt from 'bcrypt';
 
 const router = express.Router();
+
 
 router.get('/:id', async (req, res) => {
     try {
@@ -16,8 +18,26 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+    const auth: string | undefined = req.body.password as string | undefined;
+    const hash = process.env.ADMIN_CREATE_HASH || "";
     try {
-        const newUser = toNewUser(req.body);
+
+        const rightCredentials = !(auth && hash)
+        ? false
+        : await bcrypt.compare(auth, hash);
+
+        if(!rightCredentials) {
+            res.status(401).send("False credentials");
+            return;
+        }
+
+    } catch(e) {
+        console.log(e);
+        res.status(401).send("False credentials");
+    }
+
+    try {
+        const newUser = toNewUser(req.body.user);
         const result = await userService.addUser(newUser);
         const addedUser = result;
         res.json(addedUser);

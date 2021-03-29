@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { ErrorWithStatus } from '../classes';
 import { Status } from '../types';
 
 export interface Token {
@@ -10,12 +11,16 @@ export const decodedToken = (token: string | undefined): Token => {
     const secret = process.env.SECRET;
 
     if(!secret || !token || token.substr(0,7) !== 'bearer ') {
-        throw new Error("False credentials");
+        throw new ErrorWithStatus("False credentials", 401);
     }
 
-    const decodedToken  = jwt.verify(token.substr(7), secret) as Token;
-    
-    return decodedToken;
+    try {
+        const decodedToken  = jwt.verify(token.substr(7), secret) as Token;
+        return decodedToken;
+    } catch (e) {
+        console.log(e.message);
+        throw new ErrorWithStatus("False credentials", 401);
+    }
 };
 
 export const allowedUserType = (expected: Status, received: Status): boolean => {

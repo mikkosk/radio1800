@@ -1,4 +1,5 @@
-import { ErrorWithStatus, NewUser, NewUserFields, Status, TextFields, TextForTTS } from "../types";
+import { ErrorWithStatus } from "../classes";
+import { NewUser, NewUserFields, Status, TextFields, TextForTTS } from "../types";
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
@@ -90,3 +91,4 @@ export const toText = (object: TextFields): TextForTTS => {
 
     return text;
 };
+

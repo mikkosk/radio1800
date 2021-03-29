@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import userService from '../services/userService';
 import express from 'express';
 import { Token } from '../utils/userManagement';
-import { User } from '../types';
+import { LoggedInUser } from '../types';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
         const token = jwt.sign(userToken, process.env.SECRET);
 
         const {user_id, user_name, user_hash, user_status} = user;
-        const loggedInUser: User & {token: string} = {
+        const loggedInUser: LoggedInUser = {
             token,
             user_id,
             user_hash,
@@ -44,6 +44,7 @@ router.post('/', async (req, res) => {
         res.status(200).send(loggedInUser);
         
     } catch (e) {
+        console.log(e.message);
         res.status(400).send(e.message);
     }
 });

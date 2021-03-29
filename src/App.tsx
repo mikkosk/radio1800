@@ -1,30 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react';
+import {BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { AdminPage } from './components/admin/AdminPage';
+import {Login} from './components/admin/Login';
+import {AudioPlayer} from './components/AudioPlayer';
+import NotificationBar from './components/NotificationBar';
+import { loadUser } from './reducers/loginReducer';
+import { useAppDispatch } from './store';
+import loginStorage from './utils/loginStorage';
 
 const App: React.FC = () => {
-    const [playing, setPlaying] = useState(false);
+    const dispatch = useAppDispatch();
 
-    const togglePlaying = () => {
-        if(document.getElementById('player')) {
-            if(playing) {
-                (document.getElementById('player') as HTMLAudioElement).play()
-            } else {
-                (document.getElementById('player') as HTMLAudioElement).pause()
-            }
-            setPlaying(!playing)
+    useEffect(() => {
+        const user = loginStorage.loadUser();
+        if(user) {
+            dispatch(loadUser(user));
         }
-    }
-
-    return(
-        <div>
-            <div>hello webpack</div>
-            <div>
-                <audio src="http://localhost:8000/basic-radio" id='player'></audio>
-                <div> 
-                    <button onClick={() => togglePlaying()}>{playing ? "Pause" : "Play"}</button> 
-                </div>
-            </div>    
+    }, []);
+    
+    return (
+        <div className="restrict-width">
+            <Router>
+                <NotificationBar />
+                <Switch>
+                    <Route path="/main" render={() => <AudioPlayer />} />
+                    <Route path="/login" render={() => <Login />} />
+                    <Route path="/admin" render={() => <AdminPage />}/>
+                    <Redirect exact from="/" to="/main" />
+                </Switch>
+            </Router>
         </div>
-    )
-}
+    );
+};
 
-export default App
+export default App;

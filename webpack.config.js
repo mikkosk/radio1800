@@ -17,10 +17,11 @@ config = (env, argv) => {
             contentBase: path.resolve(__dirname, 'dist'),
             compress: true,
             port: 3000,
+            historyApiFallback: true
         },
         devtool: 'source-map',
         resolve: {
-            extensions: ['.ts', '.tsx', '.js', '.json']
+            extensions: ['.ts', '.tsx', '.js', '.json'],
         },
         module: {
             rules: [
@@ -40,7 +41,7 @@ config = (env, argv) => {
         },
         plugins: [
             new webpack.DefinePlugin({
-              BACKEND_URL: JSON.stringify(backend_url)
+              BACKEND_URL: JSON.stringify(backend_url),
             })
           ]
       

@@ -49,7 +49,7 @@ const getPlaylistByDay = async (date: Date): Promise<Playlist> => {
         LEFT JOIN voice ON voice.voice_id = playlist_to_voice.voice_id
         WHERE playlist.play_date = $1 
         GROUP BY playlist.playlist_id
-    `, [date]
+    `, [date.toDateString()]
     );
 
     return playlist.rows[0];

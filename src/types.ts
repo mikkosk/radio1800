@@ -55,17 +55,14 @@ export interface VoiceWithTime extends Voice {
 
 export type Metadata = Omit<Voice, "link" | "voice_name" | "added" | "last_play">;
 
-export type MetadataToLS = {
-    voice_id: string,
-    voice_length: string,
-    from_text: string,
-    to_text: string,
-    year: string
-};
 
-export type MetadataFromLS = {
-    unparsed: string
-};
+export interface IcecastMetadata {
+    icestats: {
+        source: {
+            title: string
+        }
+    }
+}
 
 export interface Playlist {
     playlist_id: string,

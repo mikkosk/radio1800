@@ -18,9 +18,11 @@ const radioBucket = gCloud.bucket("radio-1800");
 //var testFile = path.join(__dirname + "/Media/TestTracks/Spectator/Spec1.mp3");
 
 export const uploadFile = (filename: string, cloudName: string): string => {
-  const readStream = fs.createReadStream(filename);
+  
   // eslint-disable-next-line no-useless-escape
   const cleanedName = cloudName.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").replace( /\s/g, '');
+
+  const readStream = fs.createReadStream(filename);
   readStream.pipe(
       radioBucket.file(`${cleanedName}.mp3`).createWriteStream({
         resumable: false,
@@ -28,7 +30,7 @@ export const uploadFile = (filename: string, cloudName: string): string => {
       })
     )
   .on("finish", () => {
-    console.log("File:" + filename + "stored");
+    console.log("File: " + filename + " stored");
 
   });
   return `http://storage.cloud.google.com/radio-1800/${cleanedName}.mp3`;

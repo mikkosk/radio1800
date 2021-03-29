@@ -45,6 +45,15 @@ const getVoice = async (id: Voice['voice_id']): Promise<Voice> => {
     return voices.rows[0];
 };
 
+const getRandomVoice = async (): Promise<Voice> => {
+    const voices: QueryResult<Voice> = await pool.query(
+        `SELECT * FROM voice ORDER BY RANDOM() LIMIT 1
+    `
+    );
+
+    return voices.rows[0];
+};
+
 const getVoices = async (): Promise<Voice[]> => {
     const voices: QueryResult<Voice> = await pool.query(
         `SELECT * FROM voice
@@ -60,6 +69,6 @@ const deleteVoice = async(id: Voice["voice_id"]) => {
     );
 };
 
-export default {addVoice, getVoices, getVoice, updateLastPlay, deleteVoice};
+export default {addVoice, getVoices, getVoice, updateLastPlay, deleteVoice, getRandomVoice};
 
 

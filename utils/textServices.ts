@@ -1,5 +1,6 @@
+import { ErrorWithStatus } from "../classes";
 import voiceService from "../services/voiceService";
-import { ErrorWithStatus, NewVoice, TextForTTS, Voice } from "../types";
+import { NewVoice, TextForTTS, Voice } from "../types";
 import { createMP3 } from "./ttsServices";
 
 export const processNewText = async (origText: TextForTTS): Promise<Voice> => {

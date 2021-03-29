@@ -21,9 +21,9 @@ const updateChars = async(id: NodeState['id'], chars: NodeState['chars']): Promi
 
 const updateList = async(id: NodeState['id'], list: NodeState['current_list']): Promise<NodeState> => {
     const state: QueryResult<NodeState> = await pool.query(
-        `UPDATE node_state SET current_list = $1
-        WHERE node_state.id = $2 RETURNING *`,
-        [list, id]
+        `UPDATE node_state SET current_list = $1, last_updated = $2
+        WHERE node_state.id = $3 RETURNING *`,
+        [list, new Date().toDateString(), id]
     );
     return state.rows[0];
 };
