@@ -5,12 +5,14 @@ import userReducer from './reducers/userReducer';
 import loginReducer from './reducers/loginReducer';
 import stateReducer from './reducers/stateReducer';
 import notificationReducer from './reducers/notificationReducer';
+import playlistReducer from './reducers/playlistReducer';
 
 export const rootReducer = combineReducers({
     users: userReducer,
     login: loginReducer,
     state: stateReducer,
-    notification: notificationReducer
+    notification: notificationReducer,
+    playlist: playlistReducer
 });
 
 const store = configureStore({

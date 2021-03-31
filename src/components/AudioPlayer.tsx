@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import metadataService from '../services/metadataService';
-import { useAppDispatch } from '../store';
 import { IcecastMetadata, Metadata } from '../types';
-import { showNotification } from '../utils/helperFunctions';
+import PlaylistComponent from './Playlist';
 
 export const AudioPlayer: React.FC = () => {
     const [playing, setPlaying] = useState(false);
     const [connecting, setConnecting] = useState(false);
     const [lastCheck, setLastCheck] = useState(-1);
     const [metadata, setMetadata] = useState<Metadata | null>(null);
-
-    const dispatch = useAppDispatch();
+    const [failed, setFailed] = useState(false);
 
     const getMetadata = async (current: number, initial: boolean) => {
         if(current % 10 === 0 && current !== lastCheck || initial) {
@@ -18,7 +16,11 @@ export const AudioPlayer: React.FC = () => {
             if(iceMetadata  && iceMetadata.icestats.source.title) {
                 const dirtyMetadata = iceMetadata.icestats.source.title;
                 const cleanMetadata = JSON.parse(dirtyMetadata.split("'").join("\"")) as Metadata;
-                setMetadata(cleanMetadata);
+                if(!metadata || cleanMetadata.voice_id !== metadata.voice_id) {
+                    console.log(cleanMetadata);
+                    console.log((metadata));
+                    setMetadata(cleanMetadata);
+                }
             } else {
                 setMetadata(null);
             }
@@ -41,8 +43,7 @@ export const AudioPlayer: React.FC = () => {
     };
 
     const onError = () => {
-        setConnecting(true);
-        showNotification("Striimiä ei voitu ladata. Kokeile päivittää sivu!", true, dispatch);
+        setFailed(true);
     };
 
     const onTimeUpdate = () => {
@@ -54,12 +55,17 @@ export const AudioPlayer: React.FC = () => {
 
     return(
         <div>
+            {failed && <div>
+                <h4>Ei saatu yhteyttä striimiin. Päivitä sivu kokeillaksesi uudestaan!</h4>
+            </div>
+            }
+            
             <div>
                 <audio onTimeUpdate={onTimeUpdate} id='player'>
                     <source src="http://localhost:8000/basic-radio" onError={onError} />
                 </audio>
                 <div> 
-                    <button disabled={connecting} onClick={() => togglePlaying()}>{connecting ? "Yhdistetään..." : playing ? "Hiljennä!" : "Kuuntele!"}</button> 
+                    <button disabled={connecting || failed} onClick={() => togglePlaying()}>{failed ? "Ei voitu yhdistää ": connecting ? "Yhdistetään..." : playing ? "Hiljennä!" : "Kuuntele!"}</button> 
                 </div>
             </div>
             <div>
@@ -75,7 +81,8 @@ export const AudioPlayer: React.FC = () => {
                     <p>{metadata.to_text}</p>
                 </div>
                 }
-            </div>    
+            </div>  
+            <PlaylistComponent />  
         </div>
     );
 };

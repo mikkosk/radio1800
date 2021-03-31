@@ -13,3 +13,5 @@ router.get('/:year/:month/:date', async (req, res) => {
         res.status(400).send(e.message);
     }
 });
+
+export default router;

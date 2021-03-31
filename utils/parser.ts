@@ -59,7 +59,7 @@ const parseTextLink = (string: unknown, error: string): string => {
         const starts = (link:string) => {
             return text.startsWith(link);
         };
-        const viable = ["link"];
+        const viable = ["https://www.gutenberg.org/ebooks/"];
         return viable.some(starts);
       };
       

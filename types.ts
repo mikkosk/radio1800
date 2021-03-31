@@ -69,7 +69,7 @@ export type MetadataFromLS = {
 
 export interface Playlist {
     playlist_id: string,
-    play_date: Date,
+    play_date: string,
     voices: VoiceWithTime[]
 }
 export type NewVoice = Omit<Voice, "voice_id" | "added" | "last_play">;

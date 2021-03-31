@@ -27,15 +27,25 @@ router.post('/updatechars', async(req, res) => {
         const chars: number = req.body.chars as number;
         const state: NodeState = await stateService.getState();
 
+        if(!chars || !Number(chars)) {
+            res.status(400).send("Not a number");
+            return;
+        }
+
         if(new Date(state.last_updated).toDateString() === new Date().toDateString()) {
             res.status(400).send("Can't add any more characters today!");
+            return;
         }
 
         if(chars > 1000000) {
             res.status(400).send("Can't add so many");
+            return;
         }
 
+        console.log(state.id);
+        console.log(chars);
         const result = await stateService.updateChars(state.id, chars);
+        console.log(result);
         res.json(result);
 
     } catch (e) {

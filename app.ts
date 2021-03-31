@@ -9,6 +9,7 @@ import textRouter from './routers/text';
 import stateRouter from './routers/state';
 import loginRouter from './routers/login';
 import stateService from './services/stateService';
+import playlistRouter from './routers/playlist';
 
 schedule.scheduleJob('0 0 0 1 * *', async() => {
     try {
@@ -29,6 +30,7 @@ app.use('/api/user', userRouter);
 app.use('/api/text', textRouter);
 app.use('/api/state', stateRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/playlist', playlistRouter);
 
 
 export default app;

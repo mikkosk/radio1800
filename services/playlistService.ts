@@ -39,17 +39,25 @@ const getPlaylistById = async (id: Playlist['playlist_id']): Promise<Playlist> =
     return playlist.rows[0];
 };
 
+
 const getPlaylistByDay = async (date: Date): Promise<Playlist> => {
     const playlist: QueryResult<Playlist> = await pool.query(
         `SELECT playlist.*, JSON_AGG(json_build_object(
+            'voice_id', voice.voice_id,
+            'voice_length', voice.voice_length,
+            'last_play', voice.last_play,
+            'from_text', voice.from_text,
+            'to_text', voice.to_text,
+            'year', voice.year,
             'voice_name', voice.voice_name,
-            'play_time', playlist_to_voice.play_time
+            'play_time', playlist_to_voice.play_time,
+            'added', voice.added
         )) as voices FROM playlist
         LEFT JOIN playlist_to_voice ON playlist.playlist_id = playlist_to_voice.playlist_id
         LEFT JOIN voice ON voice.voice_id = playlist_to_voice.voice_id
         WHERE playlist.play_date = $1 
         GROUP BY playlist.playlist_id
-    `, [date.toDateString()]
+    `, [date]
     );
 
     return playlist.rows[0];

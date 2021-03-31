@@ -1,5 +1,7 @@
+import { unwrapResult } from '@reduxjs/toolkit';
 import React, { FormEvent, useState } from 'react';
 import { TextForTTS } from '../../../types';
+import { fetchState } from '../../reducers/stateReducer';
 import textService from '../../services/textService';
 import { useAppDispatch } from '../../store';
 import { showNotification, test } from '../../utils/helperFunctions';
@@ -9,11 +11,12 @@ export const AudioForm: React.FC = () => {
     const [link, setLink] = useState("");
     const [name, setName] = useState("");
     const [year, setYear] = useState(-1);
+    const [sending, setSending] = useState(false);
 
     const dispatch = useAppDispatch();
     
     const checkValidity = (): boolean => {
-        const validLinks: string[] = ["link"];
+        const validLinks: string[] = ["https://www.gutenberg.org/ebooks/"];
         if(!text || !link || !name || !year ) {
             showNotification("Kaikki kohdat tulee täyttää!", true, dispatch);
             return false;
@@ -40,6 +43,7 @@ export const AudioForm: React.FC = () => {
 
     const submit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setSending(true);
         if(checkValidity()) {
             try {
                 const newText: TextForTTS = {
@@ -50,6 +54,9 @@ export const AudioForm: React.FC = () => {
                 };
 
                 await textService.addText(newText);
+
+                const actionResult = await dispatch(fetchState());
+                unwrapResult(actionResult);
 
                 showNotification(`${name} added!`, false, dispatch);
                 setLink('');
@@ -62,9 +69,11 @@ export const AudioForm: React.FC = () => {
                 (document.getElementById('audio-form-name') as HTMLInputElement).value = "";
 
             } catch(e) {
+                setSending(false);
                 showNotification(e.response.data, true, dispatch);
             }
         }
+        setSending(false);
     };
 
     return(
@@ -94,7 +103,7 @@ export const AudioForm: React.FC = () => {
                     <input id="audio-form-year" type="number" min={1750} max={2000} onChange={({target}) => setYear(Number(target.value))}></input>
                 </div>
                 <div>
-                    <button type="submit">
+                    <button type="submit" disabled={sending}>
                         Luo!
                     </button>
                 </div>
