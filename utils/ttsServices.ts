@@ -6,9 +6,9 @@ import path from "path";
 import {getAudioDurationInSeconds} from 'get-audio-duration';
 import { uploadFile } from "./storageServices";
 import { ErrorWithStatus } from "../classes";
-import { TTSRequest } from "../types";
+import { TextForTTS, TTSRequest } from "../types";
 
-export const createMP3 = async(text: string, name: string): Promise<{time: string | void, filename: string}> => {
+export const createMP3 = async(text: string, name: string, metadata: TextForTTS): Promise<{time: string | void, filename: string}> => {
     const textLength = text.length;
     try {
 
@@ -42,8 +42,8 @@ export const createMP3 = async(text: string, name: string): Promise<{time: strin
 
         const request: TTSRequest = {
             input: {text: text},
-            voice: {languageCode: 'fi-FI', ssmlGender: "FEMALE"},
-            audioConfig: {audioEncoding: 'MP3'},
+            voice: {languageCode: 'fi-FI-Standard-A', ssmlGender: "FEMALE"},
+            audioConfig: {audioEncoding: 'MP3', pitch: -2.0, speakingRate: 0.8 },
         };
 
         const [response] = await client.synthesizeSpeech(request);
@@ -52,7 +52,7 @@ export const createMP3 = async(text: string, name: string): Promise<{time: strin
 
         const length = await getAudioDurationInSeconds(outputFile);
 
-        const readyFileName = uploadFile(outputFile, name);
+        const readyFileName = uploadFile(outputFile, name, metadata);
 
         return {time: new Date(Math.ceil(length) * 1000).toISOString().substr(11, 8), filename: readyFileName};
 

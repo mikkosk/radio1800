@@ -5,7 +5,7 @@ import { createMP3 } from "./ttsServices";
 
 export const processNewText = async (origText: TextForTTS): Promise<Voice> => {
     const {text, name, link, year} = origText;
-    const {time, filename} = await createMP3(text, name);
+    const {time, filename} = await createMP3(text, name, origText);
 
     try {
         const newVoice: NewVoice = {

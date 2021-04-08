@@ -6,6 +6,7 @@ import path from 'path';
 require('dotenv').config();
 
 import {Storage} from '@google-cloud/storage';
+import { TextForTTS } from '../types';
 const projectName = process.env.G_PROJECT;
 
 const gCloud = new Storage({
@@ -17,7 +18,7 @@ const radioBucket = gCloud.bucket("radio-1800");
 
 //var testFile = path.join(__dirname + "/Media/TestTracks/Spectator/Spec1.mp3");
 
-export const uploadFile = (filename: string, cloudName: string): string => {
+export const uploadFile = (filename: string, cloudName: string, metadata: TextForTTS): string => {
   
   // eslint-disable-next-line no-useless-escape
   const cleanedName = cloudName.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").replace( /\s/g, '');
@@ -26,7 +27,10 @@ export const uploadFile = (filename: string, cloudName: string): string => {
   readStream.pipe(
       radioBucket.file(`${cleanedName}.mp3`).createWriteStream({
         resumable: false,
-        gzip: true
+        gzip: true,
+        metadata: {
+          metadata
+        }
       })
     )
   .on("finish", () => {

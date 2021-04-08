@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import metadataService from '../services/metadataService';
+import BookCard from '../svgs/card';
+import PlayButton from '../svgs/PlayButton';
 import { IcecastMetadata, Metadata } from '../types';
+import ChosenVoice from './ChosenVoice';
 import PlaylistComponent from './Playlist';
 
 export const AudioPlayer: React.FC = () => {
@@ -9,6 +12,7 @@ export const AudioPlayer: React.FC = () => {
     const [lastCheck, setLastCheck] = useState(-1);
     const [metadata, setMetadata] = useState<Metadata | null>(null);
     const [failed, setFailed] = useState(false);
+    const [active, setActive] = useState(false);
 
     const getMetadata = async (current: number, initial: boolean) => {
         if(current % 10 === 0 && current !== lastCheck || initial) {
@@ -28,6 +32,7 @@ export const AudioPlayer: React.FC = () => {
     };
 
     const togglePlaying = async () => {
+        if(connecting || failed) return;
         if(document.getElementById('player')) {
             if(!playing) {
                 setConnecting(true);
@@ -54,35 +59,35 @@ export const AudioPlayer: React.FC = () => {
     };
 
     return(
-        <div>
-            {failed && <div>
-                <h4>Ei saatu yhteyttä striimiin. Päivitä sivu kokeillaksesi uudestaan!</h4>
-            </div>
-            }
-            
+        <div>       
             <div>
                 <audio onTimeUpdate={onTimeUpdate} id='player'>
                     <source src="http://localhost:8000/basic-radio" onError={onError} />
                 </audio>
-                <div> 
-                    <button disabled={connecting || failed} onClick={() => togglePlaying()}>{failed ? "Ei voitu yhdistää ": connecting ? "Yhdistetään..." : playing ? "Hiljennä!" : "Kuuntele!"}</button> 
+            </div>
+            
+            <div>
+            <div className= {active ? "book animate" : "book"}>
+                <div className={active ? "cover animate" : "cover"}></div>
+                <div className={active ? "page animate" : "page"}>
+                    <div className="rotate-back fit-inside">
+                        <PlaylistComponent /> 
+                    </div>
+                </div>
+                <div className={active ? "page turn animate" : "page turn"}>
+                    <PlayButton playing={playing} setPlaying={togglePlaying}/> 
+                    <div className="play-page-grid">
+                        {playing && <h1>~ Nyt soi ~</h1>}
+                        <ChosenVoice metadata={metadata} active={playing} errorString={"Laita radio päälle!"}/>
+                    </div> 
+                </div>
+                <div className={active ? "cover turn animate" : "cover turn"}>
+                    <div className="rotate-back" onClick={() => setActive(true)}>
+                        <BookCard connected={true} open={setActive}/>
+                    </div>
                 </div>
             </div>
-            <div>
-                {playing && metadata &&
-                <div>
-                    <h1>Nyt soi:</h1>
-                    <p>{metadata.from_text}</p>
-                    <h3>Vuodelta:</h3>
-                    <p>{metadata.year}</p>
-                    <h3>Arvioitu pituus:</h3>
-                    <p>{metadata.voice_length}</p>
-                    <h3>Linkki tekstiin:</h3>
-                    <p>{metadata.to_text}</p>
-                </div>
-                }
-            </div>  
-            <PlaylistComponent />  
+        </div>
         </div>
     );
 };

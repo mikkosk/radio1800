@@ -91,6 +91,8 @@ export type TTSRequest = {
     },
     audioConfig: {
         audioEncoding: "MP3" | "AUDIO_ENCODING_UNSPECIFIED" | "LINEAR16" | "OGG_OPUS" | null | undefined
+        pitch: number,
+        speakingRate: number
     }
 };
 
