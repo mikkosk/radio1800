@@ -2,6 +2,7 @@ import playlistService from "../services/playlistService";
 import { Playlist, Voice } from "../types";
 import stateService from "../services/stateService";
 import { ErrorWithStatus } from "../classes";
+import voiceService from "../services/voiceService";
 
 const createPlaylist = async () => {
     const playlist: Playlist = await playlistService.addPlaylist();
@@ -32,7 +33,7 @@ export const handleNewVoice = async(voice: Voice['voice_id']) => {
     const existingPlaylist: Playlist = await playlistService.getPlaylistByDay(new Date());
     if(!existingPlaylist) {
         try {
-            void createPlaylist();
+            await createPlaylist();
         } catch(e){
             console.log(e);
             throw new ErrorWithStatus("Could not create playlist", 500);
@@ -41,7 +42,8 @@ export const handleNewVoice = async(voice: Voice['voice_id']) => {
     }
 
     try {
-        void addVoiceToList(voice);
+        await addVoiceToList(voice);
+        await voiceService.updateLastPlay(voice);
     } catch(e) {
         console.log(e);
         throw new ErrorWithStatus("Could not add voice to list", 500);

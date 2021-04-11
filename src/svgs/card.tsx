@@ -1,7 +1,6 @@
 import React from 'react';
 
-const BookCard: React.FC<{ connected: boolean, open: React.Dispatch<React.SetStateAction<boolean>> }> = ({connected, open}) => {
-    console.log(connected);
+const BookCard: React.FC<{ failed: boolean, loaded: boolean, open: React.Dispatch<React.SetStateAction<boolean>>, togglePlaying: () => void }> = ({failed, loaded, open, togglePlaying}) => {
     return(
         <svg className="book-card" viewBox="0 0 378 312" fill="none" xmlns="http://www.w3.org/2000/svg">
             <title>Title for the radio.</title>
@@ -22,9 +21,9 @@ const BookCard: React.FC<{ connected: boolean, open: React.Dispatch<React.SetSta
                         </defs>
                     </svg>
                     <svg y="20%" viewBox="0 0 214 36">
-                        <text className="small-title"  textAnchor="middle">
+                        <text className={loaded  ? "small-title" : failed ? "small-title error" : "small-title"}  textAnchor="middle">
                             <textPath xlinkHref="#bottom-curve" startOffset="51%">
-                                Tarinoita keisariajan Suomesta
+                                {loaded ? "Tarinoita keisariajan Suomesta" : failed ? "Ei yhteyttä - Kokeile päivättää sivu" : "Ladataan striimiä"}
                             </textPath>
                         </text>
                         <defs>
@@ -32,15 +31,15 @@ const BookCard: React.FC<{ connected: boolean, open: React.Dispatch<React.SetSta
                         </defs>
                     </svg>
                 </g>
-                {connected &&
+                {(loaded && !failed) &&
                     <g>
                         <title>Button for opening the radio.</title>
-                        <path onClick={() => open(true)} id="open-button" d="M219.342 146.497C224.153 148.589 224.153 155.411 219.342 157.503L176.642 176.065C172.679 177.787 168.25 174.883 168.25 170.562V133.438C168.25 129.117 172.679 126.213 176.642 127.935L219.342 146.497Z"/>
+                        <path onClick={() => {open(true); togglePlaying();}} id="open-button" d="M219.342 146.497C224.153 148.589 224.153 155.411 219.342 157.503L176.642 176.065C172.679 177.787 168.25 174.883 168.25 170.562V133.438C168.25 129.117 172.679 126.213 176.642 127.935L219.342 146.497Z"/>
                     </g>
                 }
-                {!connected &&
+                {(!loaded || failed) &&
                     <g id="card-lock">
-                        <path id="Polygon 1" d="M183.237 117.07C186.963 114.054 192.216 113.811 196.205 116.47C198.634 118.089 200.316 120.611 200.878 123.476L205 144.5L210.608 179.773C211.67 186.453 206.508 192.5 199.744 192.5H178.39C171.458 192.5 166.254 186.165 167.6 179.364L174.5 144.5L178.254 124.477C178.736 121.91 180.115 119.598 182.145 117.954L183.237 117.07Z" fill="#6863A7"/>
+                        <path id="Polygon 1" d="M183.237 117.07C186.963 114.054 192.216 113.811 196.205 116.47C198.634 118.089 200.316 120.611 200.878 123.476L205 144.5L210.608 179.773C211.67 186.453 206.508 192.5 199.744 192.5H178.39C171.458 192.5 166.254 186.165 167.6 179.364L174.5 144.5L178.254 124.477C178.736 121.91 180.115 119.598 182.145 117.954L183.237 117.07Z" fill="#f1d061"/>
                         <path id="Polygon 2" d="M187.078 119.841C188.585 119.006 190.415 119.006 191.922 119.841L194.47 121.251C195.757 121.964 196.666 123.207 196.953 124.65L199.812 139.025C200.427 142.117 198.061 145 194.908 145H189.5H184.462C181.352 145 178.996 142.192 179.538 139.13L182.085 124.724C182.347 123.238 183.267 121.95 184.587 121.22L187.078 119.841Z" fill="#F1F8C9"/>
                         <path id="Polygon 3" d="M186.699 161.043C188.088 160.112 189.91 160.087 191.316 160.992C192.948 162.044 193.643 164.079 192.997 165.909L192.333 167.793C191.565 169.968 191.967 172.384 193.396 174.193L193.993 174.949C196.53 178.159 195.356 182.9 191.615 184.556C189.954 185.291 188.049 185.266 186.406 184.492C182.859 182.822 181.654 178.351 183.902 175.139L184.588 174.161C185.859 172.344 186.235 170.048 185.61 167.921L184.978 165.772C184.455 163.995 185.161 162.075 186.699 161.043Z" fill="#F1F8C9"/>
                     </g>

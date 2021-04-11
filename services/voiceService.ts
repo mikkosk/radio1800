@@ -29,7 +29,7 @@ const addVoice = async (newVoice: NewVoice): Promise<Voice> => {
 const updateLastPlay = async(id: Voice['voice_id']): Promise<Voice> => {
     const added = new Date().toDateString();
     const voice: QueryResult<Voice> = await pool.query(
-        `UPDATE voice SET voice.last_play = $1
+        `UPDATE voice SET last_play = $1
         WHERE voice.voice_id = $2 RETURNING *`,
         [added, id]
     );
@@ -47,7 +47,7 @@ const getVoice = async (id: Voice['voice_id']): Promise<Voice> => {
 
 const getRandomVoice = async (): Promise<Voice> => {
     const voices: QueryResult<Voice> = await pool.query(
-        `SELECT * FROM voice ORDER BY RANDOM() LIMIT 1
+        `SELECT * FROM voice where last_play = (select min(last_play) from voice) ORDER BY RANDOM() LIMIT 1
     `
     );
 

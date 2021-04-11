@@ -5,7 +5,6 @@ const baseUrl = 'http://localhost:8000/status-json.xsl';
 
 const getMetadata = async(): Promise<IcecastMetadata> => {
     const res: AxiosResponse<IcecastMetadata> = await axios.get(baseUrl);
-    console.log(res.data);
     return res.data;
 };
 

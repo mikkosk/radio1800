@@ -42,7 +42,6 @@ export const Register: React.FC = () => {
         }
 
         try {
-            console.log(newUser);
             const result = await userService.addUser(newUser, auth);
 
             dispatch(setUser(result));
@@ -59,7 +58,6 @@ export const Register: React.FC = () => {
 
             showNotification("New user created! Welcome!", false);
         } catch (e) {
-            console.log(e);
             showNotification(e.response.data, true);
         }
     };

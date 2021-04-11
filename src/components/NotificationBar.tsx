@@ -8,7 +8,6 @@ const NotificationBar: React.FC = () => {
     return(
         <div>
             {notifications.map((n, index) => {
-                console.log(n.message);
                 return(
                     <div key={index}>
                         <p style = {{color: 'red'}}>{n.message}</p>

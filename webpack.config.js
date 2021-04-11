@@ -1,4 +1,5 @@
 const path = require('path')
+const WebpackBundleAnalyzer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const webpack = require('webpack')
 
 config = (env, argv) => { 
@@ -19,7 +20,7 @@ config = (env, argv) => {
             port: 3000,
             historyApiFallback: true
         },
-        devtool: 'source-map',
+        devtool: argv.mode === 'production' ? 'cheap-module-source-map' : 'source-map',
         resolve: {
             extensions: ['.ts', '.tsx', '.js', '.json'],
         },
@@ -42,7 +43,8 @@ config = (env, argv) => {
         plugins: [
             new webpack.DefinePlugin({
               BACKEND_URL: JSON.stringify(backend_url),
-            })
+            }),
+            new WebpackBundleAnalyzer()
           ]
       
     }

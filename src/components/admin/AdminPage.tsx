@@ -6,6 +6,7 @@ import { State } from './State';
 import { AudioForm } from './AudioForm';
 import { Login } from './Login';
 import { Register } from './Register';
+import NotificationBar from '../NotificationBar';
 
 export const AdminPage: React.FC = () => {
     
@@ -13,6 +14,7 @@ export const AdminPage: React.FC = () => {
 
     return(
         <div>
+            <NotificationBar />
             {!user && 
                 <div>  
                     <h1>Et ole kirjautunut sisään!</h1>

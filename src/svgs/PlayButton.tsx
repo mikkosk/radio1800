@@ -2,14 +2,14 @@ import React from 'react';
 
 const PlayButton: React.FC<{playing: boolean, setPlaying: () => void}> = ({playing, setPlaying}) => {
     return (
-        <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="full-height"viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="radio-button">
                 <rect id="rec-back" width="300" height="300" fill="black"/>
                 <rect id="rec-front" x="20" y="20" width="260" height="260" fill="white" fillOpacity="0.68"/>
                 <circle id="circle-back" cx="150" cy="150" r="75" fill="black"/>
                 <circle id="circle-front" cx="150" cy="150" r="70" fill="white"/>
-                <path className={playing ? "play-mode animate in" : "play-mode animate out"} d="M117.673 111.324L195.087 150.448L117.673 186.448L139.5 150.448L117.673 111.324Z" fill="#0A0000"/>
-                <g className={!playing ? "pause-mode animate in" : "pause-mode animate out"}>
+                <path className={!playing ? "play-mode animate in" : "play-mode animate out"} d="M117.673 111.324L195.087 150.448L117.673 186.448L139.5 150.448L117.673 111.324Z" fill="#0A0000"/>
+                <g className={playing ? "pause-mode animate in" : "pause-mode animate out"}>
                     <path d="M122 116.868L128.321 103H138.046L144.367 116.868V184.579L138.046 196H128.321L122 184.579V116.868Z" fill="black"/>
                     <path d="M152.633 116.868L158.954 103H168.679L175 116.868V184.579L168.679 196H158.954L152.633 184.579V116.868Z" fill="black"/>
                 </g>

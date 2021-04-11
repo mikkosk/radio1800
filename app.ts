@@ -23,14 +23,21 @@ schedule.scheduleJob('0 0 0 1 * *', async() => {
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, '/files')));
-app.use(express.static(path.join(__dirname, '/Media/TestTracks/Spectator')));
+
+app.use(express.static(path.join(__dirname, './dist')));
 app.use('/api/audio', liquidsoapRouter);
 app.use('/api/user', userRouter);
 app.use('/api/text', textRouter);
 app.use('/api/state', stateRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/playlist', playlistRouter);
+app.get('/*', function(_req, res) {
+    res.sendFile(path.join(__dirname, './dist/index.html'), function(err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    });
+  });
 
 
 export default app;

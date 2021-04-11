@@ -1,9 +1,9 @@
 
 @import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap');
 
-
+  
 body {
-  background-color: #521616;
+  background-color: #44584a;
   font-family: 'UnifrakturCook', cursive;
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
@@ -23,6 +23,13 @@ button {
     border-radius: 0%;
     appearance: none;
     outline-style: hidden;
+}
+
+.search-button {
+    width: 50%;
+    height: 50%;
+    font-size: 1em;
+    line-height: 0;
 }
 
 button:hover {
@@ -47,34 +54,42 @@ input[type=number] {
 
 .book {
   position: absolute;
-  top: 50%;
-  left: calc(50% - 9.25rem);
+  top: calc(50%);
+  left: calc(50% - 13.875rem);
   bottom: 0;
   right: 0;
   margin: 0 0 0 0;
-  width: 37rem;
+  width: 55.5rem;
+  height: 37.5rem;
   perspective: 70rem;
   transform: translate(-50%, -50%);
 }
+
 .cover {
+  background-image:linear-gradient(to left, 
+    #00000000 0% 2.5rem,
+    #00000063 2rem 3rem,
+    #9e1414 2.5rem 100%
+  );
   background-color: #3f2920;
   transform: rotateY(180deg);
-  width: 18.5rem;
-  height: 25rem;
+  width: 27.75rem;
+  height: 37.5rem;
+  padding: 2rem 5rem 2rem 2rem;
 }
 .page {
   top: 0.5rem;
-  left: 0.6rem;
+  left: 0.875rem;
   background-color: var(--page-colour);
   transform: rotateY(180deg);
-  width: 18rem;
-  height: 24rem;
+  width: 27rem;
+  height: 36rem;
   overflow: hidden;
+  padding: 2rem;
 }
 
 .cover, .page {
   position: absolute;
-  padding: 2rem;
   transform-origin: 100% 0;
   box-shadow: inset 3px 0px 20px rgba(0, 0, 0, 0.2),
     0px 0px 15px rgba(0, 0, 0, 0.1);
@@ -124,27 +139,33 @@ input[type=number] {
 }
 
 #card-back {
-    fill: #B2C9D9
+    fill: #f1d061
 }
 
 #open-button {
-    fill: #6863A7
+    fill: #f1d061
 }
 
 #open-button:hover {
-    fill: #464372
+    fill: #9c863c
 }
 
 .book-card {
-    height:10rem; 
+    width: 100%;
+    height: 50%; 
 }
 
 .big-title {
-    font-size: 2rem;
+    font-size: 2em;
 }
 
 .small-title {
-    font-size: 1rem;
+    font-size: 1em;
+}
+
+.error {
+    fill:red;
+    font-size: .8em;
 }
 
 .cover-top-text {
@@ -211,13 +232,15 @@ input[type=number] {
     overflow-y: scroll;
     overflow-x: hidden;
     text-align: left;
+    scrollbar-width: none;
 }
 
 .list-title {
     margin-top: 0%;
-    font-size: 0.8em;
+    font-size: 1em;
     text-align: right;
     margin-right: 1em;
+    word-wrap: break-word;
 }
 
 .list-time {
@@ -290,14 +313,80 @@ input[type=number] {
     animation: goOut 2s forwards;
 }
 
+.now-plays-grid {
+    margin-top: 0.2em;
+    display: grid;
+    grid-template-rows: 20% 80%;
+    grid-template-columns: 100%;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+
 .play-page-grid {
     display: grid;
-    grid-template-rows: 50%;
     grid-template-columns: 100%;
+    grid-template-rows: 60% 40%;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+
+.chosen-data {
+    font-size: 1.5em;
+}
+
+.play-page-grid .chosen-data {
+    display: grid;
+    grid-auto-rows: 25% 35% 35%;
+    grid-template-columns: 50% 50%;
+    grid-template-areas:
+        "title title"
+        "year length"
+        "link link";
+    border: solid black;
+    overflow: hidden;
+    margin-top: 2.5%;
+    height: 90%;
+}
+
+.chosen-title {
+    margin-top: 0.3em;
+    grid-area: title;
+}
+
+
+.chosen-year {
+    grid-area: year;
+}
+
+.chosen-length {
+    grid-area: length;
+}
+
+.chosen-link {
+    grid-area: link;
+}
+
+.chosen-error h3 {
+    font-size: 2em;
+}
+
+.play-page-grid h1 {
+    margin: 0.2em 0 0.1em 0;
+    font-size: 1.8em;
+}
+
+.full-height {
+    height: 100%;
 }
 
 .chosen-voice {
     text-align: center;
+}
+
+.now-plays-grid .chosen-voice {
+    font-size: 0.7em;
 }
 
 .chosen-voice p {
@@ -313,6 +402,7 @@ input[type=number] {
 }
 
 .chosen-voice a {
+    display: block;
     margin-top: 0%;
     font-size: 1.2em;
     margin: 0 0 0.6em 0;
@@ -378,4 +468,137 @@ input[type=number] {
 
 #input-background {
     fill: var(--page-colour)
+}
+
+.text-in {
+    animation: 1s disappearText forwards;
+}
+
+.text-out {
+    animation: 1s appearText forwards;
+}
+
+.chosen-error {
+    font-size: 1.5em;
+}
+
+@keyframes appearText {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes disappearText {
+    0% {
+        opacity: 100%;
+    }
+
+    100% {
+        opacity: 0%;
+    }
+}
+
+
+@media (max-aspect-ratio: 1/1) {
+    html {
+        font-size: 2em;
+    }
+    .book {
+        width: 27.75rem;
+        height: 75rem;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateZ(180deg) ;
+        top: calc(50% - 18.75rem);
+    }
+
+    .book.animate {
+        animation: slideBookMobile 3s forwards;
+    }
+
+    .page {
+        left: calc(-100% + 1.1rem);
+        top: 1.5rem;
+        font-size: 1em;
+    }
+
+    .cover {
+        left: -100%;
+        display: grid;
+        font-size: 1em;
+        background-image:linear-gradient(to top, 
+        #00000000 0% 2.5rem,
+        #00000063 2rem 3rem,
+        #9e1414 2.5rem 100%
+        );
+        padding: 2rem 2rem 5rem 2rem;
+    }
+
+    .small-title {
+        font-size: .5em
+    }
+
+    .error {
+        font-size: .4em;
+    }
+
+    .big-title {
+        font-size: 1em;
+    }
+
+    .list-title {
+        font-size: 2em;
+        text-align: left;
+        margin-right: 0em;
+    }
+
+    .number-input {
+        font-size: 2em;
+    }
+
+    .list-current h1 {
+        font-size: 2em;
+    }
+
+    .book-card {
+        width: 75%;
+    }
+    
+    .cover.turn.animate {
+        animation: bookCoverMobile 3s forwards;
+        transform-origin: bottom right;
+    }
+    .page.turn.animate {
+        animation: bookOpenMobile 3s forwards;
+        transform-origin: bottom right;
+    }
+
+    .rotate-back {
+        transform: rotateY(-180deg) rotateZ(180deg);
+    }
+
+    .page:nth-of-type(1).animate {
+        animation-delay: 0.05s;
+    }
+
+    @keyframes bookOpenMobile {
+        30% { z-index: 999 }
+        100% {  transform: rotateZ(-180deg);
+          z-index: 999;}
+      }
+    @keyframes bookCoverMobile {
+        30% { z-index: 999 }
+        100% {  transform: rotateZ(-180deg);
+            z-index: 1;}
+    }
+      
+    @keyframes slideBookMobile {
+        100% {
+            top: 39rem;
+        }
+    }
+
 }

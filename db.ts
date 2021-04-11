@@ -11,17 +11,7 @@ const devConfig = {
     database: process.env.DBDB,
 };
 
-const proConfig = () => {
-  const dbSocketPath = process.env.DB_SOCKET_PATH || '/cloudsql';
-  return({
-      user: process.env.DBUSER, 
-      password: process.env.DBPASS, 
-      database: process.env.DBDB, 
-      host: `/${dbSocketPath}/${process.env.CLOUD_SQL_CONNECTION_NAME}`,
-    }
-  );
-};
 
-const pool = new pg.Pool(process.env.NODE_ENV === "production" ? proConfig() : devConfig);
+const pool = new pg.Pool(devConfig);
 
 export default pool;

@@ -42,10 +42,10 @@ router.get('/metadata', (_req, res) => {
     res.status(200).send(JSON.stringify(metadata));
 });
 
-router.post('/next', (req, res) => {
+router.post('/next', async (req, res) => {
   const body: MetadataFromLS = req.body as MetadataFromLS;
   const metadataLS: Metadata = JSON.parse(body.unparsed.split("'").join("\"")) as Metadata;
-  void handleNewVoice(metadataLS.voice_id);
+  await handleNewVoice(metadataLS.voice_id);
   res.status(200).send();
 });
 

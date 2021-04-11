@@ -37,5 +37,5 @@ export const uploadFile = (filename: string, cloudName: string, metadata: TextFo
     console.log("File: " + filename + " stored");
 
   });
-  return `http://storage.cloud.google.com/radio-1800/${cleanedName}.mp3`;
+  return `http://storage.googleapis.com/radio-1800/${cleanedName}.mp3`;
 };

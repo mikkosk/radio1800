@@ -40,10 +40,8 @@ export const Login: React.FC = () => {
     };
 
     const submit= async (event: FormEvent<HTMLFormElement>) => {
-        console.log(user);
         event.preventDefault();
         await submitLogin(username, password);
-        console.log(user);
     };
 
     return(

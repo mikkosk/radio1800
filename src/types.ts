@@ -96,9 +96,3 @@ export interface YYYYMMDD {
     month: string,
     date: string
 }
-
-export interface YYYYMMDDNumber {
-    year: number,
-    month: number,
-    date: number
-}

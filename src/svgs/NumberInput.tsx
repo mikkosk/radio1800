@@ -3,15 +3,12 @@ import React, { useEffect, useState } from 'react';
 const NumberInput: React.FC<{date: number,  changeDate: (value: string) => boolean}> = ({date, changeDate}) => {
     const [value, setValue] = useState<number | null>(date);
     const getCheckedDate = (value: string) => { 
-        console.log(value);
         if(!changeDate(value)) {
             setValue(date);
         }
     };
 
     useEffect(() => {
-        console.log("Updated date:");
-        console.log(date);
         setValue(date);
     }, [date]);
     return(
