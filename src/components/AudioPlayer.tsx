@@ -22,7 +22,6 @@ export const AudioPlayer: React.FC = () => {
     const [currentDate] = useState(new Date());
     const listDate = useSelector((store: RootState) => store.playlist.play_date);
 
-
     const dispatch = useAppDispatch();
 
     const setNewMetada = async (meta: Metadata) => {
@@ -51,7 +50,8 @@ export const AudioPlayer: React.FC = () => {
                     setMetadata(null);
                 }
             } catch (e) {
-                location.reload();
+                console.log(e);
+                showNotification("Ongelma metadatan hakemisessa", true, dispatch);
             }
         }
     };
@@ -97,7 +97,7 @@ export const AudioPlayer: React.FC = () => {
         <div>       
             <div>
                 <audio onTimeUpdate={onTimeUpdate} onLoadedData={() => isLoaded()} id='player'>
-                    <source src="http://localhost:8000/basic-radio" onError={onError} />
+                    <source src={"http://"+ location.hostname+"/stream/basic-radio"} onError={onError} />
                 </audio>
             </div>
             

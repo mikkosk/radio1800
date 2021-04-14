@@ -14,7 +14,7 @@ const updateChars = async(id: NodeState['id'], chars: NodeState['chars']): Promi
     const state: QueryResult<NodeState> = await pool.query(
         `UPDATE node_state SET chars = $1, last_updated = $2
         WHERE node_state.id = $3 RETURNING *`,
-        [chars, new Date().toDateString(), id]
+        [chars, new Date().toLocaleDateString('us-US', {weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Europe/Helsinki'}), id]
     );
     return state.rows[0];
 };

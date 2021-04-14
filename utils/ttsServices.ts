@@ -8,6 +8,39 @@ import { uploadFile } from "./storageServices";
 import { ErrorWithStatus } from "../classes";
 import { TextForTTS, TTSRequest } from "../types";
 
+
+interface SplitText {text: string, num: number}
+const parseIncomingText = (text: string): SplitText[] => {
+    if(text.length < 5000) {
+        return [{
+            text,
+            num: 1
+        }];
+    }
+
+    const fullTextArray: string[] = text.split(" ");
+    let allTexts: SplitText[] = [];
+    let currentText = "";
+    let currentLength = 0;
+    let currentNumber = 1;
+    for (let i = 0; i < fullTextArray.length; i++) {
+        const newWord = fullTextArray[i];
+        currentLength += newWord.length + 1;
+        if(currentLength > 5000) {
+            allTexts = allTexts.concat({text: currentText, num: currentNumber});
+            currentText = newWord;
+            currentLength = newWord.length;
+            currentNumber += 1;
+        } else {
+            currentText += " " + newWord;
+        }
+    }
+
+    allTexts = allTexts = allTexts.concat({text: currentText, num: currentNumber});
+    
+    return allTexts;
+};
+
 export const createMP3 = async(text: string, name: string, metadata: TextForTTS): Promise<{time: string | void, filename: string}> => {
     const textLength = text.length;
     try {
@@ -16,7 +49,7 @@ export const createMP3 = async(text: string, name: string, metadata: TextForTTS)
 
         //Create state if using first time
         if(!state) {
-            state = await stateService.addState(100000, 0);
+            state = await stateService.addState(15000000, 0);
         }
 
         //Check that no string is over 250000 characters
@@ -36,19 +69,15 @@ export const createMP3 = async(text: string, name: string, metadata: TextForTTS)
         throw new ErrorWithStatus("Unsure of status. Check again later!", 500);
     }
 
+    const textParts = parseIncomingText(text);
     try {
-        const client = new textToSpeech.TextToSpeechClient();
+        for(let i = 0; i < textParts.length; i++) {
+            await createPart(textParts[i]);
+        }
+
+        concatFiles(textParts.length);
+
         const outputFile = path.join(__dirname, '../files/temporaryTTS.mp3');
-
-        const request: TTSRequest = {
-            input: {text: text},
-            voice: {languageCode: 'fi-FI-Standard-A', ssmlGender: "FEMALE"},
-            audioConfig: {audioEncoding: 'MP3', pitch: -2.0, speakingRate: 0.8 },
-        };
-
-        const [response] = await client.synthesizeSpeech(request);
-        const writeFile = util.promisify(fs.writeFile);
-        await writeFile(outputFile, response.audioContent as string, 'binary');
 
         const length = await getAudioDurationInSeconds(outputFile);
 
@@ -60,4 +89,46 @@ export const createMP3 = async(text: string, name: string, metadata: TextForTTS)
         console.log(e);
         throw new ErrorWithStatus("Something went wrong with turning the file to audio", 500);
     } 
+};
+
+const createPart = async (text: SplitText) => {
+    const client = new textToSpeech.TextToSpeechClient();
+    const fileString = '../files/temporaryPart' + String(text.num) + '.mp3';
+    const partOutput = path.join(__dirname, fileString);
+
+    const request: TTSRequest = {
+        input: {text: text.text},
+        voice: {languageCode: 'fi-FI', ssmlGender: "FEMALE"},
+        audioConfig: {audioEncoding: 'MP3', pitch: -2.0, speakingRate: 0.8 },
+    };
+
+    const [response] = await client.synthesizeSpeech(request);
+    const writeFile = util.promisify(fs.writeFile);
+    await writeFile(partOutput, response.audioContent as string, 'binary');
+};
+
+const concatFiles = (number: number) => {
+    const recursiveStreamWriter = (inputFiles: string[]) => {
+        if(inputFiles.length == 0) {
+            return;
+        }
+    
+        const nextFile = inputFiles.shift(); 
+        if(!nextFile) return;
+        const readStream = fs.createReadStream(nextFile);
+    
+        readStream.pipe(writeStream, {end: false});
+        readStream.on('end', () => {
+            recursiveStreamWriter(inputFiles);
+        });
+    };
+
+    const writeStream = fs.createWriteStream(path.join(__dirname, '../files/temporaryTTS.mp3'));
+
+    let inputs: string[] = [];
+    for (let i = 1; i <= number; i++) {
+        inputs = inputs.concat(path.join(__dirname, `../files/temporaryPart${i}.mp3`));
+    }
+
+    recursiveStreamWriter(inputs);
 };

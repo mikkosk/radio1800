@@ -12,14 +12,14 @@ const createPlaylist = async () => {
     
     const state = await stateService.getState();
     if(!state) {
-        await stateService.addState(100000, Number(playlist.playlist_id));
+        await stateService.addState(15000000, Number(playlist.playlist_id));
     } else {
         await stateService.updateList(state.id, Number(playlist.playlist_id));
     }
 };
 
 const addVoiceToList = async (voice: Voice['voice_id']) => {
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Europe/Helsinki' });
     const state = await stateService.getState();
     
     if(!state) {

@@ -5,11 +5,12 @@ const router = express.Router();
 
 router.get('/:year/:month/:date', async (req, res) => {
     try {
-        const date = new Date(req.params.year + "-" + req.params.month + "-" + req.params.date);
+        const date = new Date(Date.UTC(Number(req.params.year), Number(req.params.month) - 1, Number(req.params.date)));
         const result = await playlistService.getPlaylistByDay(date);
         const playlist = result;
         res.json(playlist);
     } catch (e) {
+        console.log(e);
         res.status(400).send(e.message);
     }
 });

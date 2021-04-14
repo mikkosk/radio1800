@@ -2,11 +2,11 @@ import express from 'express';
 import userService from '../services/userService';
 import { allowedUserType, decodedToken } from '../utils/userManagement';
 import stateService from '../services/stateService';
-import { NodeState } from '../types';
+//import { NodeState } from '../types';
 
 const router = express.Router();
 
-
+/*
 router.post('/updatechars', async(req, res) => {
     let token;
 
@@ -54,6 +54,7 @@ router.post('/updatechars', async(req, res) => {
         return;
     }
 });
+*/
 
 router.get('/', async (req, res) => {
     let token;

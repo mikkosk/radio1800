@@ -31,9 +31,13 @@ router.get('/next', async (req, res) => {
       res.status(500).send();
       return;
     }
-
+    if(!voice || !voice.voice_id) {
+      console.log("Voice not found");
+      res.status(500).send();
+      return;
+    }
     const {voice_id, link, voice_length, from_text, to_text, year} = voice;
-    metadata = {voice_id: String(voice_id), voice_length, from_text: from_text || "", to_text: to_text || "", year: String(year)};
+    metadata = {voice_id: String(voice_id), voice_length: voice_length || "00:00:00", from_text: from_text || "", to_text: to_text || "", year: String(year)};
 
     res.status(200).send(link);
 });
@@ -45,7 +49,13 @@ router.get('/metadata', (_req, res) => {
 router.post('/next', async (req, res) => {
   const body: MetadataFromLS = req.body as MetadataFromLS;
   const metadataLS: Metadata = JSON.parse(body.unparsed.split("'").join("\"")) as Metadata;
-  await handleNewVoice(metadataLS.voice_id);
+  try {
+    await handleNewVoice(metadataLS.voice_id);
+  } catch (e) {
+    console.log("New voice could not be handled");
+    console.log(e);
+    res.status(500).send();
+  }
   res.status(200).send();
 });
 

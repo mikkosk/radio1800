@@ -2,14 +2,14 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { fetchState } from '../../reducers/stateReducer';
-import stateService from '../../services/stateService';
+//import stateService from '../../services/stateService';
 import { RootState, useAppDispatch } from '../../store';
 import { NodeState } from '../../types';
 import { showNotification } from '../../utils/helperFunctions';
 
 export const State: React.FC = () => {
     const [loading, setLoading] = useState(true);
-    const [number, setNumber] = useState(0);
+    //const [number, setNumber] = useState(0);
     const state: NodeState = useSelector((state: RootState) => state.state);
 
     const dispatch = useAppDispatch();
@@ -28,6 +28,8 @@ export const State: React.FC = () => {
         void tryFetchState();
     }, []);
 
+    /*
+
     const updateCharacters = async() => {
         try {
             await stateService.updateChars(number);
@@ -36,9 +38,13 @@ export const State: React.FC = () => {
         } catch (e) {
             showNotification(e.response.data, true, dispatch);
         }
+
+        <input type="number" min="0" max="1000000" onChange={({target}) => setNumber(Number(target.value))}></input>
+        <button onClick={() => updateCharacters()}>Add characters</button>
         
     };
 
+    */
     return(
         <div>
             {loading &&
@@ -48,8 +54,6 @@ export const State: React.FC = () => {
                 <div>
                     <h1>Current status of MP3 creation: </h1>
                     <p>Characters left this month: {state.chars}</p>
-                    <input type="number" min="0" max="1000000" onChange={({target}) => setNumber(Number(target.value))}></input>
-                    <button onClick={() => updateCharacters()}>Add characters</button>
                 </div>
             }
         </div>

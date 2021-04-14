@@ -9,11 +9,13 @@ const getState = async(): Promise<NodeState> => {
     return res.data;
 };
 
+/*
 const updateChars = async(number: number): Promise<NodeState> => {
     const res: AxiosResponse<NodeState> = await axios.post(baseUrl + "/updatechars", {chars: number}, {headers: {Authorization: getAuthenticationHeaders().headers.Authorization}});
     return res.data;
 };
+*/
 
 export default {
-    getState, updateChars
+    getState
 };

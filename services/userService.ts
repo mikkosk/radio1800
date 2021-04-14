@@ -7,7 +7,7 @@ const addUser = async (entry: NewUser): Promise<User> => {
     const {user_name, password, user_status} = entry;
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
-    
+    console.log(passwordHash);
     const newUser: QueryResult<User> = await pool.query(
         "INSERT INTO radio_user (user_name, user_hash, user_status) VALUES($1, $2, $3) RETURNING *",
         [user_name, passwordHash, user_status]

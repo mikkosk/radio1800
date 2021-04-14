@@ -5,7 +5,7 @@ import { RootState } from '../../store';
 import { State } from './State';
 import { AudioForm } from './AudioForm';
 import { Login } from './Login';
-import { Register } from './Register';
+//import { Register } from './Register';
 import NotificationBar from '../NotificationBar';
 
 export const AdminPage: React.FC = () => {
@@ -24,7 +24,7 @@ export const AdminPage: React.FC = () => {
                     </div>
                     <div>
                         <h2>Luo käyttäjä</h2>
-                        <Register />
+                        <p>EI KÄYTÖSSÄ</p>
                     </div>
                 </div>
             }

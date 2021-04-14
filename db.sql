@@ -45,7 +45,8 @@ CREATE TABLE node_state
 (
     id serial NOT NULL PRIMARY KEY,
     chars integer,
-    current_list integer
+    current_list integer,
+    last_updated DATE
 );
 
 

@@ -1,8 +1,8 @@
 import express from 'express';
 import userService from '../services/userService';
-import { toNewUser } from '../utils/parser';
+//import { toNewUser } from '../utils/parser';
 import { decodedToken } from '../utils/userManagement';
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 
 const router = express.Router();
 
@@ -17,9 +17,11 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+/*
 router.post('/', async (req, res) => {
     const auth: string | undefined = req.body.password as string | undefined;
     const hash = process.env.ADMIN_CREATE_HASH || "";
+    /*
     try {
 
         const rightCredentials = !(auth && hash)
@@ -35,7 +37,7 @@ router.post('/', async (req, res) => {
         console.log(e);
         res.status(401).send("False credentials");
     }
-
+    
     try {
         const newUser = toNewUser(req.body.user);
         const result = await userService.addUser(newUser);
@@ -45,6 +47,7 @@ router.post('/', async (req, res) => {
         res.status(400).send(e.message);
     }
 });
+*/
 
 router.delete('/:id', async (req, res) => {
     try {

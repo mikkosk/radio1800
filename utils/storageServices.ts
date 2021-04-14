@@ -8,9 +8,11 @@ require('dotenv').config();
 import {Storage} from '@google-cloud/storage';
 import { TextForTTS } from '../types';
 const projectName = process.env.G_PROJECT;
+const production = process.env.NODE_ENV === 'production';
+const googlePath = production ? "../../" + projectName + "-5c6c752e9840.json" : "../" + projectName + "-5c6c752e9840.json";
 
 const gCloud = new Storage({
-  keyFilename: path.join(__dirname, "../" + projectName + "-5c6c752e9840.json"),
+  keyFilename: path.join(__dirname, googlePath),
   projectId: projectName
 });
 

@@ -1,5 +1,5 @@
 const path = require('path')
-const WebpackBundleAnalyzer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+//const WebpackBundleAnalyzer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const webpack = require('webpack')
 
 config = (env, argv) => { 
@@ -8,6 +8,9 @@ config = (env, argv) => {
         ? 'http://localhost:3001/'
         : 'http://localhost:3001/'
 
+    const stream_url = argv.mode === 'production' 
+        ? 'stream'
+        : ':8000'
     return {
         entry: ['@babel/polyfill','./src/index'],
         output: {
@@ -42,9 +45,8 @@ config = (env, argv) => {
         },
         plugins: [
             new webpack.DefinePlugin({
-              BACKEND_URL: JSON.stringify(backend_url),
-            }),
-            new WebpackBundleAnalyzer()
+              BACKEND_URL: JSON.stringify(backend_url)
+            })
           ]
       
     }

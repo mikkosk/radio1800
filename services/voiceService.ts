@@ -16,7 +16,7 @@ import pool from "../db";
 
 const addVoice = async (newVoice: NewVoice): Promise<Voice> => {
     const {link, voice_length, voice_name, from_text, to_text, year} = newVoice;
-    const added = new Date().toDateString();
+    const added = new Date().toLocaleDateString('us-US', {weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Europe/Helsinki'});
     const last_play = new Date(1800, 0, 1).toDateString();
     const voice: QueryResult<Voice> = await pool.query(
         `INSERT INTO voice (link, voice_length, voice_name, added, last_play, from_text, to_text, year)
@@ -27,7 +27,7 @@ const addVoice = async (newVoice: NewVoice): Promise<Voice> => {
 };
 
 const updateLastPlay = async(id: Voice['voice_id']): Promise<Voice> => {
-    const added = new Date().toDateString();
+    const added = new Date().toLocaleDateString('us-US', {weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Europe/Helsinki'});
     const voice: QueryResult<Voice> = await pool.query(
         `UPDATE voice SET last_play = $1
         WHERE voice.voice_id = $2 RETURNING *`,

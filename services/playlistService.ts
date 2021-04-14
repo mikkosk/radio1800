@@ -10,7 +10,7 @@ import pool from "../db";
 */
 
 const addPlaylist = async (): Promise<Playlist> => {
-    const added = new Date().toDateString();
+    const added = new Date().toLocaleDateString('us-US', {weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Europe/Helsinki'});
     const playlist: QueryResult<Playlist> = await pool.query(
         `INSERT INTO playlist (play_date) VALUES ($1) RETURNING *`, [added]
     );
@@ -57,9 +57,9 @@ const getPlaylistByDay = async (date: Date): Promise<Playlist> => {
         LEFT JOIN voice ON voice.voice_id = playlist_to_voice.voice_id
         WHERE playlist.play_date = $1 
         GROUP BY playlist.playlist_id
-    `, [date]
+    `, [date.toLocaleDateString('us-US', {weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Europe/Helsinki'})]
     );
-
+    
     return playlist.rows[0];
 };
 
