@@ -8,9 +8,9 @@ icecast.xml
 script.liq
 pgdata
 /reverse_proxy
-build
-dist
-files
-liqCon
-logs
-music
+/build
+/dist
+/files
+/liqCon
+/logs
+/music
