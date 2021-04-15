@@ -71,15 +71,14 @@ export const createMP3 = async(text: string, name: string, metadata: TextForTTS)
 
     const textParts = parseIncomingText(text);
     try {
+        let length = 0;
         for(let i = 0; i < textParts.length; i++) {
-            await createPart(textParts[i]);
+            length += await createPart(textParts[i]);
         }
 
         concatFiles(textParts.length);
 
         const outputFile = path.join(__dirname, '../files/temporaryTTS.mp3');
-
-        const length = await getAudioDurationInSeconds(outputFile);
 
         const readyFileName = uploadFile(outputFile, name, metadata);
 
@@ -91,7 +90,7 @@ export const createMP3 = async(text: string, name: string, metadata: TextForTTS)
     } 
 };
 
-const createPart = async (text: SplitText) => {
+const createPart = async (text: SplitText): Promise<number> => {
     const client = new textToSpeech.TextToSpeechClient();
     const fileString = '../files/temporaryPart' + String(text.num) + '.mp3';
     const partOutput = path.join(__dirname, fileString);
@@ -105,6 +104,7 @@ const createPart = async (text: SplitText) => {
     const [response] = await client.synthesizeSpeech(request);
     const writeFile = util.promisify(fs.writeFile);
     await writeFile(partOutput, response.audioContent as string, 'binary');
+    return await getAudioDurationInSeconds(partOutput);
 };
 
 const concatFiles = (number: number) => {
@@ -116,7 +116,6 @@ const concatFiles = (number: number) => {
         const nextFile = inputFiles.shift(); 
         if(!nextFile) return;
         const readStream = fs.createReadStream(nextFile);
-    
         readStream.pipe(writeStream, {end: false});
         readStream.on('end', () => {
             recursiveStreamWriter(inputFiles);
