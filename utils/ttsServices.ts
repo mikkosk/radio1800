@@ -76,7 +76,7 @@ export const createMP3 = async(text: string, name: string, metadata: TextForTTS)
             length += await createPart(textParts[i]);
         }
 
-        concatFiles(textParts.length);
+        await concatFiles(textParts.length);
 
         const outputFile = path.join(__dirname, '../files/temporaryTTS.mp3');
 
@@ -107,18 +107,17 @@ const createPart = async (text: SplitText): Promise<number> => {
     return await getAudioDurationInSeconds(partOutput);
 };
 
-const concatFiles = (number: number) => {
-    const recursiveStreamWriter = (inputFiles: string[]) => {
-        if(inputFiles.length == 0) {
-            return;
-        }
-    
-        const nextFile = inputFiles.shift(); 
-        if(!nextFile) return;
-        const readStream = fs.createReadStream(nextFile);
-        readStream.pipe(writeStream, {end: false});
-        readStream.on('end', () => {
-            recursiveStreamWriter(inputFiles);
+const concatFiles = async (number: number) => {
+    const recursiveStreamWriter = async (inputFiles: string[]) => {
+        await new Promise<void>(resolve => {
+            const nextFile = inputFiles.shift(); 
+            if(!nextFile) {console.log("end"); resolve(); return;}
+            const readStream = fs.createReadStream(nextFile);
+            readStream.pipe(writeStream, {end: false});
+            readStream.on('end', async () => {
+                await recursiveStreamWriter(inputFiles);
+                resolve();
+            });
         });
     };
 
@@ -129,5 +128,5 @@ const concatFiles = (number: number) => {
         inputs = inputs.concat(path.join(__dirname, `../files/temporaryPart${i}.mp3`));
     }
 
-    recursiveStreamWriter(inputs);
+    await recursiveStreamWriter(inputs);
 };
